@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-image: url('/static/images/sky.jpg'); /* Add your image URL here */
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            height: 100px;
+            padding: 10px 20px;
+            margin-bottom: 40px;
+            color: white;
+            width: 100%;
+        }
+        
+        .navbar .left {
+            font-size: 35px;
+        }
+        
+        .navbar .right a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        
+        .navbar .right a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: white;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #graph-container {
+            width: 80%;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #graph-container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="left">Carbon Emission Trends Visualization</div>
+        <div class="right">
+            <a href="/">Home</a>
+            <a href="/carbontracker">Carbon Tracker</a>
+            <a href="/community">Community</a>
+            {% if session.get('logged_in') %}
+            <a href="/logout" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Logout</a>
+            {% else %}
+            <a href="/login/" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Login / Register</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    
+
+    <div id="graph-container">
+        {{ plot_html | safe }}
+    </div>
+
+</body>
+</html>

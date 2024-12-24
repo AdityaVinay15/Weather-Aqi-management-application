@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Ensure the video stays behind the content */
+        }
+        .register-box {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        .register-box h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .register-box form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .register-box label {
+            margin-bottom: 5px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .register-box input {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .register-box button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .register-box button:hover {
+            background-color: #45a049;
+        }
+
+        .register-box p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .register-box a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .register-box a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 16px;
+            font-weight:bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <video class="video-bg" autoplay muted loop>
+        <source src="{{ url_for('static', filename='videos/bgvideo.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="register-box">
+        <h2>Register</h2>
+        
+        <!-- Error message will be displayed here -->
+        <p id="error-message" class="error-message"></p>
+
+        <form id="register-form" method="POST">
+            <label for="username">Name</label>
+            <input type="text" id="username" name="username" placeholder="Enter your name">
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password">
+
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password">
+
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" placeholder="Enter your city">
+
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </div>
+
+    <script>
+        // Form validation on submit
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            var username = document.getElementById('username').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirm_password').value;
+            var city = document.getElementById('city').value;
+            var errorMessage = document.getElementById('error-message');
+
+            // Clear any previous error message
+            errorMessage.textContent = "";
+
+            // If any field is empty, show an error message
+            if (!username) {
+                e.preventDefault();
+                errorMessage.textContent = "Please enter your name.";
+                document.getElementById('username').focus();
+                return;
+            }
+
+            if (!email) {
+                e.preventDefault();
+                errorMessage.textContent = "Please enter your email.";
+                document.getElementById('email').focus();
+                return;
+            }
+
+            if (!password) {
+                e.preventDefault();
+                errorMessage.textContent = "Please enter your password.";
+                document.getElementById('password').focus();
+                return;
+            }
+
+            if (!confirmPassword) {
+                e.preventDefault();
+                errorMessage.textContent = "Please confirm your password.";
+                document.getElementById('confirm_password').focus();
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                errorMessage.textContent = "Passwords do not match.";
+                document.getElementById('confirm_password').focus();
+                return;
+            }
+
+            if (!city) {
+                e.preventDefault();
+                errorMessage.textContent = "Please enter your city.";
+                document.getElementById('city').focus();
+            }
+        });
+
+        // Remove default browser validation messages
+        document.getElementById('email').addEventListener('invalid', function(e) {
+            e.preventDefault();
+        });
+
+        document.getElementById('password').addEventListener('invalid', function(e) {
+            e.preventDefault();
+        });
+
+        document.getElementById('confirm_password').addEventListener('invalid', function(e) {
+            e.preventDefault();
+        });
+
+        document.getElementById('city').addEventListener('invalid', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>

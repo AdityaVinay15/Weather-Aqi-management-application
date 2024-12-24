@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carbon Footprint Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-image: url('/static/images/sky.jpg'); /* Add your image URL here */
+            background-size: cover; /* Ensures the image covers the entire page */
+            background-position: center center; /* Centers the image */
+            background-attachment: fixed; /* Keeps the background fixed when scrolling */
+            min-height: 100vh; /* Ensures the body takes up at least the full height of the viewport */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers all content horizontally */
+            overflow-x: hidden; /* Centers all content horizontally */
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;  /* Distributes items evenly */
+            align-items: center;             /* Centers items vertically */
+            background:transparent;
+            height: 100px;
+            padding: 10px 20px;
+            margin-bottom:40px;
+            color: white;
+            width: 100%; /* Ensures the navbar stretches across the full width */
+        }
+        
+        /* Styling for navbar items */
+        .navbar .left {
+            font-size: 35px;
+        }
+        
+        .navbar .right a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        
+        /* Hover effect for links */
+        .navbar .right a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="left">Carbon Footprint Tracker</div>
+        <div class="right">
+            <a href="/">Home</a>
+            <a href="/carbontracker">Carbon Tracker</a>
+            <a href="/community">Community</a>
+            {% if session.get('logged_in') %}
+            <a href="/logout" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Logout</a>
+            {% else %}
+            <a href="/login/" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Login / Register</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container">
+        <h1 style="color:green;font-size:35px;">Carbon Footprint Calculator</h1>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                {{ form.distance.label }}
+                {{ form.distance(class="form-control") }}
+            </div>
+            
+            <div class="form-group">
+                {{ form.mode.label }}
+                {{ form.mode(class="form-control") }}
+            </div>
+            
+            <div class="form-group">
+                {{ form.prev_usage.label }}
+                {{ form.prev_usage(class="form-control") }}
+            </div>
+            
+            <div class="form-group">
+                {{ form.today_usage.label }}
+                {{ form.today_usage(class="form-control") }}
+            </div>
+            
+            <div class="form-group">
+                {{ form.dry_waste.label }}
+                {{ form.dry_waste(class="form-control") }}
+            </div>
+            
+            <div class="form-group">
+                {{ form.wet_waste.label }}
+                {{ form.wet_waste(class="form-control") }}
+            </div>
+            
+            <div>
+                {{ form.submit(style="background-color: rgb(52, 189, 56); color: white; border: none; cursor: pointer;") }}
+            </div>
+        </form>
+    </div>
+</body>
+</html>

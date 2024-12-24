@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-image: url('/static/images/sky.jpg'); /* Add your image URL here */
+            background-size: cover; /* Ensures the image covers the entire page */
+            background-position: center center; /* Centers the image */
+            background-attachment: fixed; /* Keeps the background fixed when scrolling */
+            min-height: 100vh; /* Ensures the body takes up at least the full height of the viewport */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers all content horizontally */
+            overflow-x: hidden; /* Centers all content horizontally */
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;  /* Distributes items evenly */
+            align-items: center;             /* Centers items vertically */
+            background:transparent;
+            height: 100px;
+            padding: 10px 20px;
+            margin-bottom:40px;
+            color: white;
+            width: 100%; /* Ensures the navbar stretches across the full width */
+        }
+        
+        /* Styling for navbar items */
+        .navbar .left {
+            font-size: 35px;
+        }
+        
+        .navbar .right a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        
+        /* Hover effect for links */
+        .navbar .right a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Search container style */
+        .search-container {
+            display: flex;
+            justify-content: center; /* Centers the content */
+            align-items: center; /* Centers the content vertically */
+            margin-top: 20px; /* Adjust margin as needed */
+        }
+        
+        .search-box {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px; /* Adjust width as needed */
+            border: 1px solid #ffffff;
+            border-radius: 10px;
+        }
+        
+        .search-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .search-btn:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 30px;
+            width: 80%;
+            max-width: 900px;
+            margin-top: 50px;
+            margin-bottom: 100px;
+            justify-self: center; /* Centers the grid container horizontally */
+        }
+        
+        .box {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height:125px;
+        }
+        
+        .box .label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .box .value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .charts-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center charts horizontally */
+            margin-top: 50px; /* Add space above the charts */
+            margin-bottom:50px;
+            gap: 50px; /* Add space between the charts */
+            color:black;
+        }
+    
+        canvas {
+            width: 80% !important; /* Reduce the width of the chart */
+            max-width: 800px; /* Ensure the chart doesn't get too wide */
+            height: 400px !important; /* Adjust height */
+        } 
+        
+        .news-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Create a 4x4 grid */
+            gap: 10px; /* Space between each card */
+            margin-top: 50px; /* Space above the news section */
+            width: 95%; /* Adjust to control the width of the grid */
+            
+            justify-content: center; /* Center the grid horizontally */
+        }
+        
+        .news-card {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .news-card img {
+            max-width: 80%; /* Make the image responsive */
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .news-card a {
+            text-decoration: none; /* Remove underline from the link */
+        }
+        .news-card h4 {
+            font-size: 18px;
+            color: black; /* Adjust the title color */
+            font-weight: bold;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="left">Weather & Environment Dashboard</div>
+        <div class="right">
+            <a href="/">Home</a>
+            <a href="/carbontracker">Carbon Tracker</a>
+            <a href="/community">Community</a>
+            {% if session.get('logged_in') %}
+            <a href="/logout" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Logout</a>
+            {% else %}
+            <a href="/login/" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Login / Register</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="search-container">
+        <form method="get" action="/">
+            <input type="text" id="location-input" name="city" placeholder="Search for a location" class="search-box" value="{{ weather.city }}">
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>
+    
+    <div class="grid-container">
+        
+        <div class="box" id="temperature">
+            <div class="label">Temperature</div>
+            <div class="value" id="temperature">{{ weather.temperature }}°C</div>
+        </div>
+        <div class="box" id="feels-like">
+            <div class="label">Feels Like</div>
+            <div class="value" id="feels-like">{{ weather.feels_like }}°C</div>
+        </div>
+        <div class="box" id="humidity">
+            <div class="label">Humidity</div>
+            <div class="value" id="humidity-value">{{ weather.humidity }}%</div>
+        </div>
+    
+        <div class="box" id="windspeed">
+            <div class="label">Wind Speed</div>
+            <div class="value" id="windspeed-value">{{ weather.wind_speed }} m/s</div>
+        </div>
+    
+        <div class="box" id="visibility">
+            <div class="label">Visibility</div>
+            <div class="value" id="visibility-value">{{ weather.visibility }} km</div>
+        </div>
+    
+        <div class="box" id="pressure">
+            <div class="label">Pressure</div>
+            <div class="value" id="pressure-value">{{ weather.pressure }} hPa</div>
+        </div>
+    
+        <div class="box" id="sunrise">
+            <div class="label">Sunrise</div>
+            <div class="value" id="sunrise-value">{{ weather.sunrise }}</div>
+        </div>
+    
+        <div class="box" id="sunset">
+            <div class="label">Sunset</div>
+            <div class="value" id="sunset-value">{{ weather.sunset }}</div>
+        </div>
+    
+        <div class="box" id="aqi">
+            <div class="label">AQI</div>
+            <div class="value" id="aqi-value">{{ aqi }}</div>
+        </div>
+    </div>
+    <div class="charts-container">
+        <h1>Temperature Chart</h1>
+        <canvas id="temperatureChart"></canvas>
+    
+        <h1>Pressure Chart</h1>
+        <canvas id="pressureChart"></canvas>
+    </div>
+    
+
+    <script>
+        // Temperature Chart
+        const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+        const temperatureData = [{{ weather.temperature }}, {{ weather.feels_like }}];
+        new Chart(tempCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Temperature', 'Feels Like'],
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: temperatureData,
+                    backgroundColor: ["#ea2300", "#33B5E5"]
+                }]
+            }
+        });
+
+        // Pressure Chart
+        const pressureCtx = document.getElementById('pressureChart').getContext('2d');
+        const pressureData = [{{ weather.pressure }}, {{ weather.feels_like }}];
+        new Chart(pressureCtx, {
+            type: 'line',
+            data: {
+                labels: ['Pressure', 'Feels Like'],
+                datasets: [{
+                    label: 'Pressure (hPa)',
+                    data: pressureData,
+                    borderColor: "#FF5F1B",
+                    backgroundColor: "#FF5F1B",
+                    fill: true
+                }]
+            }
+        });
+
+
+</script>  
+<h1>Latest News</h1>
+<div class="news-container">
+    {% for article in news %}
+    <div class="news-card">
+    <a href="{{ article.link }}" target="blank">
+        {% if article.image %}
+        <img src="{{ article.image }}" alt="{{ article.title }}">
+        {% else %}
+        <img src="{{ "/static/images/news.jpg" }}" alt="{{ "Default Image" }}">
+        {% endif %}
+        <h4>{{ article.title }}</h4>
+    </a>
+</div>
+{% endfor %}
+
+</body>
+</html>

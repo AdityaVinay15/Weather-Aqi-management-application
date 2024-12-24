@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-image: url('/static/images/sky.jpg'); /* Add your image URL here */
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            height: 100px;
+            padding: 10px 20px;
+            margin-bottom: 40px;
+            color: white;
+            width: 100%;
+        }
+        
+        .navbar .left {
+            font-size: 35px;
+        }
+        
+        .navbar .right a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        
+        .navbar .right a:hover {
+            text-decoration: underline;
+        }
+
+        .create-post-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .create-post-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .create-post-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .posts-container {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .post-card {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-card img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .post-card h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .post-card p {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .post-actions .like-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .post-actions .like-button:hover {
+            background-color: #ff6b81;
+        }
+
+        .post-comments {
+            margin-top: 15px;
+        }
+
+        .post-comments h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .comment-box {
+            margin-top: 10px;
+        }
+
+        .comment-box textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            margin-bottom: 10px;
+        }
+
+        .comment-box button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .comment-box button:hover {
+            background-color: #45a049;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="left">Community</div>
+        <div class="right">
+            <a href="/">Home</a>
+            <a href="/carbontracker">Carbon Tracker</a>
+            <a href="/community">Community</a>
+            {% if session.get('logged_in') %}
+            <a href="/logout" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Logout</a>
+            {% else %}
+            <a href="/login/" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Login / Register</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Create Post Button -->
+    <div class="create-post-container">
+        <a href="/createpost" class="create-post-btn">Create Post</a>
+    </div>
+
+    <!-- Posts Section -->
+    <div class="posts-container">
+        {% for post in posts %}
+        <div class="post-card">
+            <img src="{{ post.image }}" alt="Post Image">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+            <div class="post-actions">
+                <!-- Form for liking a post -->
+                <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST">
+                    <button type="submit">❤️ Like ({{ post.likes }})</button>
+                </form>
+            </div>
+            <div class="post-comments">
+                <h4>Comments:</h4>
+                <!-- List of comments -->
+                {% for comment in post.comments %}
+                <p><strong>{{ comment.user_id }}:</strong> {{ comment.content }}</p>
+                {% endfor %}
+                <!-- Form for adding a comment -->
+                <form action="{{ url_for('submit_comment', post_id=post.id) }}" method="POST" class="comment-form">
+                    <textarea name="comment_text" placeholder="Add a comment..." required class="comment-textarea"></textarea>
+                    <button type="submit" class="submit-btn">Post Comment</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+
+</body>
+</html>

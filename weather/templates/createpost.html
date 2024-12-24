@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CreatePost</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            height: 100px;
+            padding: 10px 20px;
+           
+            color: white;
+            width: 100%;
+        }
+        
+        .navbar .left {
+            font-size: 35px;
+        }
+        
+        .navbar .right a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        
+        .navbar .right a:hover {
+            text-decoration: underline;
+        }
+        body {
+            background-image: url('/static/images/sky.jpg'); /* Add your image URL here */
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;  /* Align content to the top */
+            overflow-x: hidden;
+            padding-top: 30px;  /* Add padding from the top */
+        }
+        
+        .create-post-container {
+            display: flex;
+            justify-content: center;  /* Center the form horizontally */
+            align-items: center;  /* Center the form vertically */
+            width: 100%;  /* Full width */
+            margin-top: 50px;  /* Move container up a bit */
+        }
+        
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 500px;  /* Increased size */
+            text-align: left;  /* Align form fields to the left */
+        }
+        
+        .form-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .form-container input,
+        .form-container textarea,
+        .form-container button {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            text-align: left;  /* Align the text inside the input fields to the left */
+        }
+        
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+        }
+        
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        
+        
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="left">Create Post</div>
+        <div class="right">
+            <a href="/">Home</a>
+            <a href="/carbontracker">Carbon Tracker</a>
+            <a href="/community">Community</a>
+            {% if session.get('logged_in') %}
+            <a href="/logout" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Logout</a>
+            {% else %}
+            <a href="/login/" style="display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;">Login / Register</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Create Post Section -->
+    <div class="create-post-container">
+        <div class="form-container">
+            <h2>Create a New Post</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <label for="title">Post Title</label>
+                <input type="text" id="title" name="title" placeholder="Enter the post title" required>
+
+                <label for="content">Post Content</label>
+                <textarea id="content" name="content" placeholder="Enter the content of your post" rows="5" required></textarea>
+
+                <label for="image">Upload Image</label>
+                <input type="file" id="image" name="image" accept="image/*">
+
+                <button type="submit" style="text-align:center;">Submit</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
